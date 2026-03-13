@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arrow Puzzle Game</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#0f172a,#1e293b);
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+flex-direction:column;
+text-align:center;
+overflow:hidden;
+}
+
+h1{
+margin-bottom:10px;
+}
+
+#sequence{
+font-size:32px;
+letter-spacing:10px;
+margin:20px;
+}
+
+button{
+padding:14px 20px;
+font-size:22px;
+margin:8px;
+background:transparent;
+border:2px solid #ff4d6d;
+color:white;
+border-radius:12px;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+background:#ff4d6d;
+transform:scale(1.1);
+}
+
+button:active{
+transform:scale(.9);
+}
+
+#win{
+display:none;
+font-size:55px;
+color:#ff4d6d;
+animation:pop 1s forwards;
+}
+
+@keyframes pop{
+0%{transform:scale(0)}
+100%{transform:scale(1)}
+}
+
+.heart{
+position:absolute;
+color:#ff4d6d;
+font-size:20px;
+animation:float 5s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh)}
+100%{transform:translateY(-10vh)}
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Arrow Puzzle Game</h1>
+
+<p>Repeat the arrow sequence</p>
+
+<div id="sequence"></div>
+
+<div>
+
+<button onclick="press('⬆️')">⬆️</button>
+<button onclick="press('⬇️')">⬇️</button>
+<button onclick="press('⬅️')">⬅️</button>
+<button onclick="press('➡️')">➡️</button>
+
+</div>
+
+<h2 id="win">I LOVE YOU ANY ❤️</h2>
+
+<script>
+
+let arrows=["⬆️","⬇️","⬅️","➡️"];
+let gameSeq=[];
+let userSeq=[];
+let level=0;
+
+function startGame(){
+
+nextLevel();
+
+}
+
+function nextLevel(){
+
+userSeq=[];
+level++;
+
+let random=arrows[Math.floor(Math.random()*4)];
+gameSeq.push(random);
+
+showSequence();
+
+}
+
+function showSequence(){
+
+let seq=document.getElementById("sequence");
+
+seq.innerHTML="";
+
+let i=0;
+
+let interval=setInterval(()=>{
+
+seq.innerHTML+=gameSeq[i]+" ";
+
+i++;
+
+if(i>=gameSeq.length){
+
+clearInterval(interval);
+
+}
+
+},700);
+
+}
+
+function press(arrow){
+
+userSeq.push(arrow);
+
+check(userSeq.length-1);
+
+}
+
+function check(i){
+
+if(userSeq[i]!==gameSeq[i]){
+
+alert("Wrong! Try again");
+
+location.reload();
+
+}
+
+if(userSeq.length===gameSeq.length){
+
+if(level===5){
+
+winGame();
+
+}else{
+
+setTimeout(nextLevel,800);
+
+}
+
+}
+
+}
+
+function winGame(){
+
+document.getElementById("sequence").style.display="none";
+
+document.querySelectorAll("button").forEach(b=>b.style.display="none");
+
+document.getElementById("win").style.display="block";
+
+setInterval(()=>{
+
+let heart=document.createElement("div");
+
+heart.className="heart";
+
+heart.innerHTML="❤️";
+
+heart.style.left=Math.random()*100+"vw";
+
+heart.style.fontSize=(20+Math.random()*30)+"px";
+
+document.body.appendChild(heart);
+
+setTimeout(()=>heart.remove(),5000);
+
+},300);
+
+}
+
+startGame();
+
+</script>
+
+</body>
+  </html>
